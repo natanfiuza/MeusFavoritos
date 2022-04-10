@@ -64,6 +64,12 @@
 		flex-direction: row;
 		flex-wrap: nowrap;
 	}
+	h4 {
+		margin-left: 50px;
+		font-size: 22px;
+		font-weight: 400;
+		background-color: var(--Grey-2);
+	}
 	dt {
 		
 		width: 100% ;
@@ -78,7 +84,16 @@ window.onload = function () {
 	for (let i=0; i < elements.length; i++) 
 	{    
 		const icon_src =  elements[i].getAttribute("ICON");
-		elements[i].innerHTML = "<img src=\""+icon_src+"\"> "+elements[i].innerHTML; 
+		const add_date =  elements[i].getAttribute("ADD_DATE");
+		let date = new Date(parseInt(add_date));
+		if (icon_src) {
+			elements[i].innerHTML = "<img src=\""+icon_src+"\" width=\"26\" height=\"26\"> "+elements[i].innerHTML; 
+		} else {
+			elements[i].innerHTML = "<img src=\"./assets/img/default_icon.png\" width=\"26\" height=\"26\"> "+elements[i].innerHTML; 
+		}
+		if (add_date != "1649607488" && parseInt(add_date)>1649607488) {
+			elements[i].innerHTML = elements[i].innerHTML+"<h4>"+date.toLocaleDateString("pt-BR")+"&nbsp;"+add_date+"</h4>"
+		}
 	}  
 	const elements_h3 = document.getElementsByTagName("h3");
 	for (let i=0; i < elements_h3.length; i++) 
