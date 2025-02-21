@@ -1,106 +1,153 @@
 <!-- INCLUDES -->
 <link rel="icon" href="favicon.ico" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet">
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+  rel="stylesheet"
+/>
 <style>
-:root{
-        --color-primary: #FF577F;
-        --color-primary-Focus: #FF427F;
-        --color-primary-Negative: #59323F;
-        --color-Sucess: #3FE864;
-        --color-Negative: #E83F5B;
+  :root {
+    --color-primary: #ff577f;
+    --color-primary-Focus: #ff427f;
+    --color-primary-Negative: #59323f;
+    --color-Sucess: #3fe864;
+    --color-Negative: #e83f5b;
 
-        --color-info: #2757f3;
-        --color-addcart: #217e38;
-        --primary: 33;
-        --teste: hsla(559,100%,50%,0.5);
-        --teste2: hsla(559,60%,60%,0.9);
-        --Grey-4: #121214;
-        --Grey-3: #212529;
-        --Grey-2: #343B41;
-        --Grey-1: #868E96;
-        --Grey-0: #F8F9FA;
-        --branco: #FFFFFF;
-        
-        --font-family-primary: 'Nunito', sans-serif;
-        --font-family-secundary: 'Inter', sans-serif;
+    --color-info: #2757f3;
+    --color-addcart: #217e38;
+    --primary: 33;
+    --teste: hsla(559, 100%, 50%, 0.5);
+    --teste2: hsla(559, 60%, 60%, 0.9);
+    --Grey-4: #121214;
+    --Grey-3: #212529;
+    --Grey-2: #343b41;
+    --Grey-1: #868e96;
+    --Grey-0: #f8f9fa;
+    --branco: #ffffff;
 
-
-    }
-    *{
-        margin: 5px;
-        padding: 5px;
-        box-sizing: border-box;
-        outline: 0;
-        list-style: none;
-		font-family: var(--font-family-primary);
-		color: var(--Grey-0);
-		background-color: var(--Grey-3);
-		
-		
-    }
-	a {
-
-		display: flex;
-		align-content: center;
-		align-items: center;
-		flex-direction: row;
-		flex-wrap: nowrap;
-		padding: 10;
-		font-size: 22px;
-		background-color: var(--Grey-2);
-		border-radius: 10px;
-
-	}
-	h3 {
-		font-size: 26px;
-		font-weight:900;
-		display: flex;
-		align-content: center;
-		align-items: center;
-		flex-direction: row;
-		flex-wrap: nowrap;
-	}
-	h4 {
-		margin-left: 50px;
-		font-size: 22px;
-		font-weight: 400;
-		background-color: var(--Grey-2);
-	}
-	dt {
-		
-		width: 100% ;
-	
-	}
-
+    --font-family-primary: "Nunito", sans-serif;
+    --font-family-secundary: "Inter", sans-serif;
+  }
+  * {
+    margin: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+    outline: 0;
+    list-style: none;
+    font-family: var(--font-family-primary);
+    color: var(--Grey-0);
+    background-color: var(--Grey-3);
+  }
+  a {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 10;
+    font-size: 22px;
+    background-color: var(--Grey-2);
+    border-radius: 10px;
+  }
+  h3 {
+    font-size: 26px;
+    font-weight: 900;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  h4 {
+    margin-left: 50px;
+    font-size: 22px;
+    font-weight: 400;
+    background-color: var(--Grey-2);
+  }
+  dt {
+    width: 100%;
+  }
 </style>
 <script>
+/**
+ * Processa elementos `<a>` e `<h3>` na página.
+ *
+ * Para cada elemento `<a>`:
+ * 1. Adiciona um ícone (se o atributo `ICON` estiver presente) ou um ícone padrão.
+ * 2. Verifica se o atributo `LAST_MODIFIED` existe. Se existir, usa esse valor para exibir a data.
+ * 3. Se `LAST_MODIFIED` não existir, verifica o atributo `ADD_DATE` e usa esse valor para a data.
+ * 4. Formata a data para o padrão brasileiro (ex: 24 de abril de 2024 às 18:30) e a exibe.
+ *
+ * Para cada elemento `<h3>`:
+ *  Adiciona um ícone de pasta.
+ *
+ * @function processElements
+ */
+function processElements() {
+    const elements = document.getElementsByTagName("a");
 
-window.onload = function () {
-	const elements = document.getElementsByTagName("a");
-	for (let i=0; i < elements.length; i++) 
-	{    
-		const icon_src =  elements[i].getAttribute("ICON");
-		const add_date =  elements[i].getAttribute("ADD_DATE");
-		let date = new Date(parseInt(add_date));
+	/**
+	 * Formata um timestamp para uma data e hora por extenso no formato brasileiro.
+	 *
+	 * @function formatDate
+	 * @param {string|number} timestamp - O timestamp em milissegundos (como string ou número).
+	 * @returns {string} A data formatada (ex: "24 de abril de 2024 às 18:30").
+	 * @inner  // Indica que formatDate é uma função interna de processElements
+	 */
+	function formatDate(timestamp) {
+		const date = new Date(parseInt(timestamp));
+		const options = {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+			hour: "numeric",
+			minute: "numeric",
+		};
+		return date.toLocaleDateString("pt-BR", options);
+	}
+
+    for (let i = 0; i < elements.length; i++) {
+		const icon_src = elements[i].getAttribute("ICON");
+		const add_date = elements[i].getAttribute("ADD_DATE");
+		const last_modified = elements[i].getAttribute("LAST_MODIFIED");
+
+		let dateToUse = null;
+
+		// Prioriza LAST_MODIFIED
+		if (last_modified) {
+			dateToUse = last_modified;
+		} else if (add_date && parseInt(add_date) > 1649607488) {
+			dateToUse = add_date;
+		}
+
 		if (icon_src) {
-			elements[i].innerHTML = "<img src=\""+icon_src+"\" width=\"26\" height=\"26\"> "+elements[i].innerHTML; 
+			elements[i].innerHTML =
+			'<img src="' +
+			icon_src +
+			'" width="26" height="26"> ' +
+			elements[i].innerHTML;
 		} else {
-			elements[i].innerHTML = "<img src=\"./assets/img/default_icon.png\" width=\"26\" height=\"26\"> "+elements[i].innerHTML; 
+			elements[i].innerHTML =
+			'<img src="./assets/img/default_icon.png" width="26" height="26"> ' +
+			elements[i].innerHTML;
 		}
-		if (add_date != "1649607488" && parseInt(add_date)>1649607488) {
-			elements[i].innerHTML = elements[i].innerHTML+"<h4>"+date.toLocaleDateString("pt-BR")+"&nbsp;"+add_date+"</h4>"
+
+		if (dateToUse) {
+			//Verifica se existe uma data válida
+			elements[i].innerHTML =
+			elements[i].innerHTML + "<h4>" + formatDate(dateToUse) + "</h4>";
 		}
-	}  
-	const elements_h3 = document.getElementsByTagName("h3");
-	for (let i=0; i < elements_h3.length; i++) 
-	{   		
-		elements_h3[i].innerHTML = "<img src=\"./assets/img/folder_new_icon.png\"> "+elements_h3[i].innerHTML; 
-	}  
+    }
+
+    const elements_h3 = document.getElementsByTagName("h3");
+    for (let i = 0; i < elements_h3.length; i++) {
+        elements_h3[i].innerHTML =
+        '<img src="./assets/img/folder_new_icon.png"> ' +
+        elements_h3[i].innerHTML;
+    }
 }
 
+  window.onload = processElements; // Chama a função processElements quando a janela carregar
 </script>
 <!-- END: INCLUDES -->
