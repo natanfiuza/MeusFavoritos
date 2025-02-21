@@ -9,7 +9,7 @@ if (!file_exists('build/')) {
 $content = "";
 foreach ($files as $file) {
     $path_parts = pathinfo($file);
-    if ($path_parts['extension'] == 'html') {
+    if ((array_key_exists('extension',$path_parts) ? $path_parts['extension'] : '') == 'html') {
         $content = file_get_contents($file);
         $content = str_replace("</TITLE>","</TITLE>".$includes,$content);
         file_put_contents("build/content.html",$content);

@@ -86,38 +86,56 @@
  */
 function processElements() {
     const elements = document.getElementsByTagName("a");
-
 	/**
-	 * Formata um timestamp para uma data e hora por extenso no formato brasileiro.
-	 *
-	 * @function formatDate
-	 * @param {string|number} timestamp - O timestamp em milissegundos (como string ou número).
-	 * @returns {string} A data formatada (ex: "24 de abril de 2024 às 18:30").
-	 * @inner  // Indica que formatDate é uma função interna de processElements
-	 */
+     * Formata um timestamp para uma data e hora por extenso no formato brasileiro.
+     *
+     * @function formatDate
+     * @param {string|number} timestamp - O timestamp em milissegundos (como string ou número).
+     * @returns {string} A data formatada (ex: "24 de abril de 2024 às 18:30").
+     * @inner  // Indica que formatDate é uma função interna de processElements
+     */
 	function formatDate(timestamp) {
-		const date = new Date(parseInt(timestamp));
-		const options = {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-			hour: "numeric",
-			minute: "numeric",
-		};
-		return date.toLocaleDateString("pt-BR", options);
-	}
+        let timestampNum = parseInt(timestamp);
 
+        // 1. Verificar se o timestamp é um número válido *ANTES* de qualquer outra coisa.
+        if (isNaN(timestampNum)) {
+            console.error("Timestamp inválido (não é um número):", timestamp);
+            return "Data inválida";
+        }
+
+        // 2. Verificar se o timestamp está em segundos e converter para milissegundos, se necessário.
+        //    Uma heurística comum é verificar se o timestamp tem 10 dígitos (segundos) ou 13 dígitos (milissegundos).
+        if (timestampNum.toString().length === 10) {
+            timestampNum *= 1000; // Converte segundos para milissegundos
+            console.warn("Timestamp em segundos detectado e convertido para milissegundos:", timestamp);
+        } else if (timestampNum.toString().length !== 13 && timestampNum.toString().length !== 10 ) {
+            console.error("Timestamp inválido (comprimento inesperado):", timestamp);
+            return "Data inválida";
+        }
+
+        const date = new Date(timestampNum);
+
+        if (isNaN(date.getTime())) {
+            console.error("Timestamp inválido (após conversão):", timestampNum);
+            return "Data inválida";
+        }
+
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        return date.toLocaleDateString("pt-BR", options);
+    }
     for (let i = 0; i < elements.length; i++) {
 		const icon_src = elements[i].getAttribute("ICON");
-		const add_date = elements[i].getAttribute("ADD_DATE");
-		const last_modified = elements[i].getAttribute("LAST_MODIFIED");
+		const add_date = elements[i].getAttribute("add_date");
+		const last_modified = elements[i].getAttribute("last_modified");
 
 		let dateToUse = null;
+		console.log('datas',add_date,last_modified);
+		
 
 		// Prioriza LAST_MODIFIED
-		if (last_modified) {
+		if (last_modified && parseInt(last_modified) > 0) {
 			dateToUse = last_modified;
-		} else if (add_date && parseInt(add_date) > 1649607488) {
+		} else if (add_date && parseInt(add_date) > 0) {
 			dateToUse = add_date;
 		}
 
@@ -142,9 +160,27 @@ function processElements() {
 
     const elements_h3 = document.getElementsByTagName("h3");
     for (let i = 0; i < elements_h3.length; i++) {
+		const add_date = elements[i].getAttribute("add_date");
+		const last_modified = elements[i].getAttribute("last_modified");
+
+		let dateToUse = null;
+		console.log('datas',add_date,last_modified);
+		
+
+		// Prioriza LAST_MODIFIED
+		if (last_modified && parseInt(last_modified) > 0) {
+			dateToUse = last_modified;
+		} else if (add_date && parseInt(add_date) > 0) {
+			dateToUse = add_date;
+		}
         elements_h3[i].innerHTML =
         '<img src="./assets/img/folder_new_icon.png"> ' +
         elements_h3[i].innerHTML;
+			if (dateToUse) {
+			//Verifica se existe uma data válida
+			elements_h3[i].innerHTML =
+			elements_h3[i].innerHTML + "<h4>" + formatDate(dateToUse) + "</h4>";
+		}
     }
 }
 
